@@ -21,7 +21,7 @@ CREATE TABLE roles (
     department_id INT NOT NULL, 
     PRIMARY KEY(id), 
     FOREIGN KEY(department_id) REFERENCES departments(id)
-)
+); 
 
 CREATE TABLE departments (
     id INT NOT NULL AUTO_INCREMENT, 
