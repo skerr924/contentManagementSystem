@@ -19,7 +19,6 @@ connection.connect(function(err) {
   startingPrompt(); 
 });
 
-
 function startingPrompt(){ 
     inquirer
       .prompt({
@@ -69,11 +68,46 @@ function addDepartment(){
             console.log (res.affectedRows + " was inserted into departments!\n")
         })
     })
-}
+};
 
 //creates a new item in the roles table 
 function addRole(){
+    let deptOptions = {}; 
+    connection.query("SELECT * FROM departments", function(err,res){ 
+        if (err) throw err; 
+        console.log(res); 
+        for (i=0; i<res.length; i++){ 
+            res[i].value = res[i].id; 
+            res[i].name = res[i].dept_name;
+        } 
+        console.log(res); 
+        deptOptions = res; 
+    })
 
+
+    inquirer.prompt({
+        name: "role",
+        type: "input",
+        message: "What is the name of the new role?",
+    },
+    { 
+        name: "salary", 
+        type: Number, 
+        message: "What is the salary for this new position? (Please enter only a number value - no '$'",
+    }, 
+    { 
+        name: "dept_id", 
+        type: "list", 
+        choices: deptOptions
+    })
+    
+    // .then(function(answer){ 
+    //     const newDept = new Department(answer.dept);
+    //     connection.query("INSERT INTO departments SET dept_name = ?", [newDept.dept_name], function(err, res){ 
+    //         if (err) throw err; 
+    //         console.log (res.affectedRows + " was inserted into departments!\n")
+    //     })
+    // })
 }
 
 //creates a new item in the employees table 
