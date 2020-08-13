@@ -17,4 +17,4 @@ VALUES ("Owner", 220000, 1), ("CTO", 100000, 2), ("Software Intern", 80000, 2), 
 /* adding departments */
 
 INSERT INTO departments (dept_name)
-VALUES ("Management"), ("IT"), ("MIT");
+VALUES ("Management"), ("IT"), ("Marketing");
