@@ -30,10 +30,13 @@ function startingPrompt(){
       .then(function(answer) {
 
         // based on their answer, call various functions 
+        // replace with switch operator later!! 
         if (answer.startRequest==="Add a department") {
           addDepartment();
         } else if(answer.startRequest==="Add a role") {
           addRole();
+        } else if(answer.startRequest==="Add an employee") {
+            addEmployee();
         } else if (answer.startRequest==="View all departments"){
             viewDepartments(); 
         } else if (answer.startRequest==="View all roles"){ 
@@ -51,14 +54,45 @@ function startingPrompt(){
 
 }
 
+//creates a new item in the departments table 
+function addDepartment(){ 
 
-// function queryAllAuctions() {
-//   var query = connection.query("SELECT * FROM auctions", function(err, res) {
-//     if (err) throw err;
-//     console.log(res);
-//     console.log(query.sql);
+}
 
-//   });
-// }
+//creates a new item in the roles table 
+function addRole(){
+
+}
+
+//creates a new item in the employees table 
+function addEmployee(){
+
+}
+
+//displays entire departments table 
+function viewDepartments(){ 
+
+}
+
+//displays entire roles table 
+function viewRoles(){ 
+
+}
+
+//displays entire employees table 
+function viewEmployees(){ 
+
+}
+
+//allows user to update an employee's role 
+function updateEmployeeRole(){ 
+
+}
+
+//allows user to update an employee's manager 
+function updateEmployeeManager(){ 
+
+}
+
 
 
