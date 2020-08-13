@@ -72,7 +72,7 @@ function addDepartment(){
 
 //creates a new item in the roles table 
 function addRole(){
-    let deptOptions = {}; 
+    let deptOptions = []; 
     connection.query("SELECT * FROM departments", function(err,res){ 
         if (err) throw err; 
         console.log(res); 
@@ -85,29 +85,31 @@ function addRole(){
     })
 
 
-    inquirer.prompt({
+    inquirer.prompt([{
         name: "role",
         type: "input",
-        message: "What is the name of the new role?",
+        message: "What is the name of the new role?"
     },
     { 
         name: "salary", 
-        type: Number, 
-        message: "What is the salary for this new position? (Please enter only a number value - no '$'",
+        type: "input", 
+        message: "What is the salary for this new position? (Please enter only a number value - no '$'"
     }, 
     { 
         name: "dept_id", 
         type: "list", 
+        message: "What department is the new role in?",
         choices: deptOptions
-    })
+    }])
     
-    // .then(function(answer){ 
-    //     const newDept = new Department(answer.dept);
-    //     connection.query("INSERT INTO departments SET dept_name = ?", [newDept.dept_name], function(err, res){ 
-    //         if (err) throw err; 
-    //         console.log (res.affectedRows + " was inserted into departments!\n")
-    //     })
-    // })
+    .then(function(answer){ 
+        console.log(answer); 
+        // const newDept = new Department(answer.dept);
+        // connection.query("INSERT INTO departments SET dept_name = ?", [newDept.dept_name], function(err, res){ 
+        //     if (err) throw err; 
+        //     console.log (res.affectedRows + " was inserted into departments!\n")
+        // })
+    })
 }
 
 //creates a new item in the employees table 
