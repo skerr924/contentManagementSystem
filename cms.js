@@ -1,6 +1,9 @@
 var mysql = require("mysql");
-var mysqlPW = require("./pw.js"); 
-
+var mysqlPW = require("./pw"); 
+var inquirer = require("inquirer");
+var Employee = require("./js/employee")
+var Role = require("./js/role")
+var Department = require("./js/department")
 
 var connection = mysql.createConnection({
   host: "localhost",
@@ -14,7 +17,6 @@ connection.connect(function(err) {
   if (err) throw err;
   console.log("connected as id " + connection.threadId);
   startingPrompt(); 
-  connection.end();
 });
 
 
@@ -56,7 +58,17 @@ function startingPrompt(){
 
 //creates a new item in the departments table 
 function addDepartment(){ 
-
+    inquirer.prompt({
+        name: "dept",
+        type: "input",
+        message: "What is the name of the new departmnet?",
+    }).then(function(answer){ 
+        const newDept = new Department(answer.dept);
+        connection.query("INSERT INTO departments SET dept_name = ?", [newDept.dept_name], function(err, res){ 
+            if (err) throw err; 
+            console.log (res.affectedRows + " was inserted into departments!\n")
+        })
+    })
 }
 
 //creates a new item in the roles table 
