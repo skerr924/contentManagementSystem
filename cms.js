@@ -30,13 +30,13 @@ function startingPrompt(){
       .then(function(answer) {
 
         // based on their answer, call various functions 
-        if (answer.startRequest === "Add a department") {
+        if (answer.startRequest==="Add a department") {
           addDepartment();
-        } else if(answer.startRequest === "Add a role") {
+        } else if(answer.startRequest==="Add a role") {
           addRole();
-        } else if (answer.startRequest === "View all departments"){
+        } else if (answer.startRequest==="View all departments"){
             viewDepartments(); 
-        } else if (answer.startRequest === "View all roles"){ 
+        } else if (answer.startRequest==="View all roles"){ 
             viewRoles(); 
         } else if (answer.startRequest==="View all employees"){ 
             viewEmployees(); 
