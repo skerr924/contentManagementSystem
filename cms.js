@@ -72,44 +72,48 @@ function addDepartment(){
 
 //creates a new item in the roles table 
 function addRole(){
-    let deptOptions = []; 
     connection.query("SELECT * FROM departments", function(err,res){ 
-        if (err) throw err; 
-        console.log(res); 
+        if (err) throw err;  
         for (i=0; i<res.length; i++){ 
             res[i].value = res[i].id; 
-            res[i].name = res[i].dept_name;
-        } 
-        console.log(res); 
-        deptOptions = res; 
+            res[i].name = res[i].dept_name; 
+            delete res[i].dept_name
+            delete res[i].id; 
+        }
+        var deptOptions = res; 
+        console.log(deptOptions); 
+        rolePrompt(deptOptions); 
     })
-
-
-    inquirer.prompt([{
-        name: "role",
-        type: "input",
-        message: "What is the name of the new role?"
-    },
-    { 
-        name: "salary", 
-        type: "input", 
-        message: "What is the salary for this new position? (Please enter only a number value - no '$'"
-    }, 
-    { 
-        name: "dept_id", 
-        type: "list", 
-        message: "What department is the new role in?",
-        choices: deptOptions
-    }])
     
-    .then(function(answer){ 
-        console.log(answer); 
-        // const newDept = new Department(answer.dept);
-        // connection.query("INSERT INTO departments SET dept_name = ?", [newDept.dept_name], function(err, res){ 
-        //     if (err) throw err; 
-        //     console.log (res.affectedRows + " was inserted into departments!\n")
-        // })
-    })
+
+    function rolePrompt(deptOptions){ 
+        inquirer.prompt([{
+            name: "role",
+            type: "input",
+            message: "What is the name of the new role?"
+        },
+        { 
+            name: "salary", 
+            type: "input", 
+            message: "What is the salary for this new position? (Please enter only a number value - no '$'"
+        }, 
+        { 
+            name: "dept_id", 
+            type: "list", 
+            message: "What department is the new role in?",
+            choices: deptOptions
+        }])
+        
+        .then(function(answer){ 
+            console.log(answer); 
+            const newRole = new Role(answer.role, answer.salary, answer.dept_id);
+            console.log(newRole); 
+            connection.query("INSERT INTO roles SET ?", newRole, function(err, res){ 
+                if (err) throw err; 
+                console.log (res.affectedRows + " was inserted into roles!\n")
+            })
+        })
+    }
 }
 
 //creates a new item in the employees table 
