@@ -1,5 +1,5 @@
 var mysql = require("mysql");
-var mysqlPW = require("./pw"); 
+var mysqlPW = require("./js/pw"); 
 var inquirer = require("inquirer");
 var Employee = require("./js/employee")
 var Role = require("./js/role")
@@ -185,16 +185,28 @@ function addEmployee(){
 
 //displays entire departments table 
 function viewDepartments(){ 
+    connection.query("SELECT * FROM departments", function(err,res){ 
+        if (err) throw err; 
+        console.table(res); 
+    })
 
 }
 
 //displays entire roles table 
 function viewRoles(){ 
+    connection.query("SELECT * FROM roles", function(err,res){ 
+        if (err) throw err; 
+        console.table(res); 
+    })
 
 }
 
 //displays entire employees table 
 function viewEmployees(){ 
+    connection.query("SELECT * FROM employees", function(err,res){ 
+        if (err) throw err; 
+        console.table(res); 
+    })
 
 }
 
