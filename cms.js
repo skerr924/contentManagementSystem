@@ -211,7 +211,56 @@ function viewEmployees(){
 }
 
 //allows user to update an employee's role 
-function updateEmployeeRole(){ 
+function updateEmployeeRole(){
+    connection.query("SELECT * FROM roles", function(err,res){ 
+        if (err) throw err;  
+        for (i=0; i<res.length; i++){ 
+            res[i].name = res[i].title; 
+            res[i].value = res[i].id; 
+            delete res[i].id; 
+            delete res[i].title;  
+        }
+        roleOptions = res; 
+        updateEmployeeStepTwo(roleOptions); 
+    })
+
+    function updateEmployeeStepTwo(roleOptions){
+        connection.query("SELECT * FROM employees", function(err,res){ 
+            if (err) throw err;  
+            for (i=0; i<res.length; i++){ 
+                var fullName = res[i].first_name + " " + res[i].last_name; 
+                res[i].name = fullName;  
+                res[i].value = res[i].role_id; 
+                delete res[i].employee_id;  
+                delete res[i].first_name; 
+                delete res[i].last_name; 
+            }
+            employeeOptions = res; 
+            updateEmployeeRolePrompt(employeeOptions, roleOptions); 
+        }) 
+    }
+
+    function updateEmployeeRolePrompt(employeeOptions, roleOptions){ 
+    
+        inquirer.prompt([{
+            name: "employee",
+            type: "list",
+            message: "Which employee would you like to update?", 
+            choices: employeeOptions
+        },
+        {
+            name: "newRole",
+            type: "list",
+            message: "What is their new role?",
+            choices: roleOptions
+        }
+        ]).then(function(answer){ 
+            connection.query("UPDATE employees SET ? WHERE ?", [{role_id: answer.newRole}, {id: answer.employee}], function(err, res){ 
+                if (err) throw err; 
+                console.log (res.affectedRows + " was updated in the employees table!\n")
+            })
+        })
+    }
 
 }
 
