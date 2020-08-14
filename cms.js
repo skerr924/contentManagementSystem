@@ -81,7 +81,6 @@ function addRole(){
             delete res[i].id; 
         }
         var deptOptions = res; 
-        console.log(deptOptions); 
         rolePrompt(deptOptions); 
     })
     
@@ -118,6 +117,69 @@ function addRole(){
 
 //creates a new item in the employees table 
 function addEmployee(){
+    connection.query("SELECT * FROM roles", function(err,res){ 
+        if (err) throw err;  
+        for (i=0; i<res.length; i++){ 
+            res[i].name = res[i].title; 
+            res[i].value = res[i].id; 
+            delete res[i].id; 
+            delete res[i].title;  
+        }
+        roleOptions = res; 
+        addEmployeeStepTwo(roleOptions); 
+    })
+    function addEmployeeStepTwo(roleOptions){ 
+        connection.query("SELECT * FROM employees", function(err,res){ 
+            if (err) throw err;  
+            for (i=0; i<res.length; i++){ 
+                var fullName = res[i].first_name + " " + res[i].last_name; 
+                res[i].name = fullName;  
+                res[i].value = res[i].role_id; 
+                delete res[i].employee_id;  
+                delete res[i].first_name; 
+                delete res[i].last_name; 
+            }
+            managerOptions = res; 
+            console.log(managerOptions); 
+            employeePrompt(roleOptions, managerOptions); 
+        })
+    }
+
+    function employeePrompt(roleOptions, managerOptions){ 
+    
+        inquirer.prompt([{
+            name: "first_name",
+            type: "input",
+            message: "What is the first name of the new employee?"
+        },
+        {
+            name: "last_name",
+            type: "input",
+            message: "What is the last name of the new employee?"
+        },
+        { 
+            name: "role_id", 
+            type: "list", 
+            message: "What is the employee's role?",
+            choices: roleOptions
+        }, 
+        { 
+            name: "manager_id", 
+            type: "list", 
+            message: "Who is the employee's manager?",
+            choices: managerOptions
+        }])
+        
+        .then(function(answer){ 
+            console.log(answer); 
+            const newEmployee = new Employee(answer.first_name, answer.last_name, answer.role_id, answer.manager_id);
+            console.log(newEmployee); 
+            connection.query("INSERT INTO employees SET ?", newEmployee, function(err, res){ 
+                if (err) throw err; 
+                console.log (res.affectedRows + " was inserted into employees!\n")
+            })
+        })
+    }
 
 }
 
