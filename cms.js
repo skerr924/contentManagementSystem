@@ -203,13 +203,19 @@ function viewDepartments(){
 
 //displays entire roles table 
 function viewRoles(){ 
-    connection.query("SELECT * FROM roles", function(err,res){ 
+    // connection.query("SELECT * FROM roles", function(err,res){ 
+    //     if (err) throw err; 
+    //     console.table(res); 
+    //     startingPrompt(); 
+
+    // })
+
+    connection.query("SELECT roles.title, roles.salary, departments.dept_name FROM roles INNER JOIN departments ON roles.department_id = departments.id", function(err,res){ 
         if (err) throw err; 
         console.table(res); 
         startingPrompt(); 
 
     })
-
 }
 
 //displays entire employees table 
