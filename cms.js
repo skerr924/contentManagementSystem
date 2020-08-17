@@ -25,8 +25,8 @@ function startingPrompt(){
         name: "startRequest",
         type: "list",
         message: "What would you like to do?",
-        choices: ["I'm done! Exit","Add a department", "Add a role", "Add an employee", "View all departments", "View all roles", 
-        "View all employees", "Update an employee's role", "Update an employee's manager", "Delete an employee"]
+        choices: ["Add a department", "Add a role", "Add an employee", "View all departments", "View all roles", 
+        "View all employees", "Update an employee's role", "Update an employee's manager", "Delete an employee", "I'm done! Exit"]
       })
       .then(function(answer) {
 
@@ -146,7 +146,6 @@ function addEmployee(){
                 delete res[i].last_name; 
             }
             managerOptions = res; 
-            console.log(managerOptions); 
             employeePrompt(roleOptions, managerOptions); 
         })
     }
@@ -177,18 +176,16 @@ function addEmployee(){
         }])
         
         .then(function(answer){ 
-            console.log(answer); 
             const newEmployee = new Employee(answer.first_name, answer.last_name, answer.role_id, answer.manager_id);
-            console.log(newEmployee); 
             connection.query("INSERT INTO employees SET ?", newEmployee, function(err, res){ 
                 if (err) throw err; 
                 console.log (res.affectedRows + " was inserted into employees!\n")
-            })
-            startingPrompt(); 
+                startingPrompt(); 
 
+            })
+          
         })
     }
-
 
 }
 
@@ -272,8 +269,9 @@ function updateEmployeeRole(){
             connection.query("UPDATE employees SET ? WHERE ?", [{role_id: answer.newRole}, {id: answer.employee}], function(err, res){ 
                 if (err) throw err; 
                 console.log (res.affectedRows + " was updated in the employees table!\n")
+                startingPrompt(); 
+
             })
-            startingPrompt(); 
 
         })
     }
@@ -314,8 +312,9 @@ function updateEmployeeManager(){
             connection.query("UPDATE employees SET ? WHERE ?", [{manager_id: answer.newManager}, {id: answer.employee}], function(err, res){ 
                 if (err) throw err; 
                 console.log (res.affectedRows + " was updated in the employees table!\n")
+                startingPrompt(); 
             })
-            startingPrompt(); 
+           
 
         })
     }
@@ -335,7 +334,6 @@ function deleteEmployee(){
             delete res[i].last_name; 
         }
         employees = res; 
-        console.log(employees); 
         deletePrompt(employees); 
     })
     
