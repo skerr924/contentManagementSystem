@@ -107,14 +107,13 @@ function addRole(){
         }])
         
         .then(function(answer){ 
-            console.log(answer); 
             const newRole = new Role(answer.role, answer.salary, answer.dept_id);
-            console.log(newRole); 
             connection.query("INSERT INTO roles SET ?", newRole, function(err, res){ 
                 if (err) throw err; 
-                console.log (res.affectedRows + " was inserted into roles!\n")
+                console.log (res.affectedRows + " was inserted into roles!\n"); 
+                startingPrompt(); 
+
             })
-            startingPrompt(); 
 
         })
     }
