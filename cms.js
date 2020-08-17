@@ -26,7 +26,7 @@ function startingPrompt(){
         type: "list",
         message: "What would you like to do?",
         choices: ["I'm done! Exit","Add a department", "Add a role", "Add an employee", "View all departments", "View all roles", 
-        "View all employees", "Update an employee's role", "Update an employee's manager"]
+        "View all employees", "Update an employee's role", "Update an employee's manager", "Delete an employee"]
       })
       .then(function(answer) {
 
@@ -48,7 +48,9 @@ function startingPrompt(){
             updateEmployeeRole(); 
         } else if(answer.startRequest==="Update an employee's manager"){ 
             updateEmployeeManager(); 
-        } else{
+        } else if(answer.startRequest==="Delete an employee"){ 
+            deleteEmployee(); 
+        }else{
           connection.end();
         }
       });
@@ -203,13 +205,6 @@ function viewDepartments(){
 
 //displays entire roles table 
 function viewRoles(){ 
-    // connection.query("SELECT * FROM roles", function(err,res){ 
-    //     if (err) throw err; 
-    //     console.table(res); 
-    //     startingPrompt(); 
-
-    // })
-
     connection.query("SELECT roles.title, roles.salary, departments.dept_name FROM roles INNER JOIN departments ON roles.department_id = departments.id", function(err,res){ 
         if (err) throw err; 
         console.table(res); 
@@ -220,7 +215,7 @@ function viewRoles(){
 
 //displays entire employees table 
 function viewEmployees(){ 
-    connection.query("SELECT * FROM employees", function(err,res){ 
+    connection.query("SELECT employees.first_name, employees.last_name, roles.title FROM employees INNER JOIN roles ON employees.role_id = roles.id", function(err,res){ 
         if (err) throw err; 
         console.table(res); 
         startingPrompt(); 
@@ -324,5 +319,52 @@ function updateEmployeeManager(){
 
         })
     }
+
+}
+
+function deleteEmployee(){
+
+    connection.query("SELECT * FROM employees", function(err,res){ 
+        if (err) throw err;  
+        for (i=0; i<res.length; i++){ 
+            var fullName = res[i].first_name + " " + res[i].last_name; 
+            res[i].name = fullName;  
+            res[i].value = res[i].role_id; 
+            delete res[i].employee_id;  
+            delete res[i].first_name; 
+            delete res[i].last_name; 
+        }
+        employees = res; 
+        console.log(employees); 
+        deletePrompt(employees); 
+    })
+    
+
+    function deletePrompt(employees){ 
+    
+        inquirer.prompt([
+        { 
+            name: "employee_gone", 
+            type: "list", 
+            message: "Which employee would you like to delete?",
+            choices: employees
+        }])
+        
+        .then(function(answer){ 
+            connection.query("DELETE FROM employees WHERE ?", {id: answer.employee_gone}, function(err, res){ 
+                if (err) {
+                    console.log("Oops! This employee manages other employees. Let's provide their subordinates with a new manager, first.")
+                    updateEmployeeManager();
+                }
+                else {
+                    console.log (res.affectedRows + " was removed from the system!\n")
+                    startingPrompt(); 
+
+                }
+            })
+
+        })
+    }
+
 
 }
