@@ -25,7 +25,7 @@ function startingPrompt(){
         name: "startRequest",
         type: "list",
         message: "What would you like to do?",
-        choices: ["Add a department", "Add a role", "Add an employee", "View all departments", "View all roles", 
+        choices: ["I'm done! Exit","Add a department", "Add a role", "Add an employee", "View all departments", "View all roles", 
         "View all employees", "Update an employee's role", "Update an employee's manager"]
       })
       .then(function(answer) {
@@ -68,6 +68,7 @@ function addDepartment(){
             console.log (res.affectedRows + " was inserted into departments!\n")
         })
     })
+    startingPrompt(); 
 };
 
 //creates a new item in the roles table 
@@ -113,6 +114,8 @@ function addRole(){
             })
         })
     }
+    startingPrompt(); 
+
 }
 
 //creates a new item in the employees table 
@@ -180,6 +183,8 @@ function addEmployee(){
             })
         })
     }
+    startingPrompt(); 
+
 
 }
 
@@ -189,6 +194,7 @@ function viewDepartments(){
         if (err) throw err; 
         console.table(res); 
     })
+    startingPrompt(); 
 
 }
 
@@ -198,6 +204,7 @@ function viewRoles(){
         if (err) throw err; 
         console.table(res); 
     })
+    startingPrompt(); 
 
 }
 
@@ -207,6 +214,7 @@ function viewEmployees(){
         if (err) throw err; 
         console.table(res); 
     })
+    startingPrompt(); 
 
 }
 
@@ -261,13 +269,47 @@ function updateEmployeeRole(){
             })
         })
     }
+    startingPrompt(); 
 
 }
 
 //allows user to update an employee's manager 
 function updateEmployeeManager(){ 
+    connection.query("SELECT * FROM employees", function(err,res){ 
+        if (err) throw err;  
+        for (i=0; i<res.length; i++){ 
+            var fullName = res[i].first_name + " " + res[i].last_name; 
+            res[i].name = fullName;  
+            res[i].value = res[i].role_id; 
+            delete res[i].employee_id;  
+            delete res[i].first_name; 
+            delete res[i].last_name; 
+        }
+        allEmployees = res; 
+        updateEmployeeManagerPrompt(allEmployees); 
+    }) 
+
+    function updateEmployeeManagerPrompt(allEmployees){ 
+    
+        inquirer.prompt([{
+            name: "employee",
+            type: "list",
+            message: "Which employee would you like to update?", 
+            choices: allEmployees
+        },
+        {
+            name: "newManager",
+            type: "list",
+            message: "Who is their new manager? If the employee does not have a manager, select their own name from the drop down.",
+            choices: allEmployees
+        }
+        ]).then(function(answer){ 
+            connection.query("UPDATE employees SET ? WHERE ?", [{manager_id: answer.newManager}, {id: answer.employee}], function(err, res){ 
+                if (err) throw err; 
+                console.log (res.affectedRows + " was updated in the employees table!\n")
+            })
+        })
+    }
+    startingPrompt(); 
 
 }
-
-//test
-
