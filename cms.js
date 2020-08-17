@@ -67,8 +67,8 @@ function addDepartment(){
             if (err) throw err; 
             console.log (res.affectedRows + " was inserted into departments!\n")
         })
+        startingPrompt(); 
     })
-    startingPrompt(); 
 };
 
 //creates a new item in the roles table 
@@ -112,9 +112,10 @@ function addRole(){
                 if (err) throw err; 
                 console.log (res.affectedRows + " was inserted into roles!\n")
             })
+            startingPrompt(); 
+
         })
     }
-    startingPrompt(); 
 
 }
 
@@ -181,9 +182,10 @@ function addEmployee(){
                 if (err) throw err; 
                 console.log (res.affectedRows + " was inserted into employees!\n")
             })
+            startingPrompt(); 
+
         })
     }
-    startingPrompt(); 
 
 
 }
@@ -193,8 +195,9 @@ function viewDepartments(){
     connection.query("SELECT * FROM departments", function(err,res){ 
         if (err) throw err; 
         console.table(res); 
+        startingPrompt(); 
+
     })
-    startingPrompt(); 
 
 }
 
@@ -203,8 +206,9 @@ function viewRoles(){
     connection.query("SELECT * FROM roles", function(err,res){ 
         if (err) throw err; 
         console.table(res); 
+        startingPrompt(); 
+
     })
-    startingPrompt(); 
 
 }
 
@@ -213,8 +217,9 @@ function viewEmployees(){
     connection.query("SELECT * FROM employees", function(err,res){ 
         if (err) throw err; 
         console.table(res); 
+        startingPrompt(); 
+
     })
-    startingPrompt(); 
 
 }
 
@@ -267,9 +272,10 @@ function updateEmployeeRole(){
                 if (err) throw err; 
                 console.log (res.affectedRows + " was updated in the employees table!\n")
             })
+            startingPrompt(); 
+
         })
     }
-    startingPrompt(); 
 
 }
 
@@ -308,8 +314,9 @@ function updateEmployeeManager(){
                 if (err) throw err; 
                 console.log (res.affectedRows + " was updated in the employees table!\n")
             })
+            startingPrompt(); 
+
         })
     }
-    startingPrompt(); 
 
 }
