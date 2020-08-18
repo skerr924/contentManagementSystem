@@ -23,7 +23,7 @@ Run an npm install to ensure all required modules are installed before usage. Th
 # Usage 
 This applicaiton is designed to be simple and user-friendly. 
 
-[Demo video, found here:] (/assets/demoVideo.mov)
+[Sample CLI interaction.](assets/demoVideo.mov)
 
 <a name="lic"></a>
 # License 
